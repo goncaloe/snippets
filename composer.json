@@ -1,0 +1,27 @@
+{
+    "name": "goncaloe/snippets",
+    "description": "Tool to manage local HTML snippets",
+    "keywords": ["snippets", "yii2", "html"],
+    "homepage": "https://www.webzop.com/",
+    "type": "project",
+    "license": "BSD-3-Clause",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "~2.0.5",
+        "bower-asset/codemirror": "~5.9.0"
+    },
+    "require-dev": {
+        "yiisoft/yii2-debug": "~2.0.0",
+        "yiisoft/yii2-gii": "~2.0.0"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
+}
