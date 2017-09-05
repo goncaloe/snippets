@@ -34,10 +34,16 @@ composer install
 
 ### 2. Configs
 
-Copy the file local.php-orig to `.php` without `-orig` and adjust to your
-needs.
+Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
 
-### 3. Database
+### 3. File Permissions
+
+Give write permissions to following folders:
+    app/runtime
+    data/
+    web/
+
+### 4. Database
 
 Create a database. By this moment you should have `config/local.php`. Specify your database connection there.
 
@@ -47,10 +53,10 @@ Then apply migrations by running:
 yii migrate
 ```
 
-### 3. Buil Indexes
+### 5. Build Indexes
 
-Each time you create a new snippet ou theme, you should rebuild the index
-
+Each time you create a new snippet or theme, you should rebuild the index.
+Enter in the tools link and click in "Rebuild Index" button
 
 SNIPPETS
 ------------
