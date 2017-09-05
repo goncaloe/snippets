@@ -25,7 +25,7 @@ CodemirrorAsset::register($this);
             <li><a class="tab-link" href="#html_content" id="show-html">HTML</a></li>
             <? if($contentCss): ?><li><a class="tab-link" href="#css_content" id="show-css">CSS</a></li><? endif; ?>
             <? if($contentJs): ?><li><a class="tab-link" href="#js_content" id="show-js">JS</a></li><? endif; ?>
-            <li><a href="<?= Url::toRoute(['snippets/iframe', 'id' => $snippet['id']]) ?>" target="_blank">Abrir IFRAME</a></li>
+            <li><a href="<?= Url::toRoute(['snippets/iframe', 'id' => $snippet['id']]) ?>" target="_blank" id="open_iframe">IFRAME</a></li>
         </ul>
     </div>
 

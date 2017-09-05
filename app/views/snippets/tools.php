@@ -16,7 +16,10 @@ $this->title = 'Tools';
 
     <a class="btn btn-primary" href="<?= Url::toRoute(['/snippets/rebuild'])?>">Rebuild Index</a>
 
+    <!--
+    <br>
     <a class="btn btn-primary" href="<?= Url::toRoute(['/snippets/clear-cache'])?>">Clear Cache</a>
+    -->
 </div>
 
 <?

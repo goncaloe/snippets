@@ -9,7 +9,7 @@
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": "~2.0.5",
-        "bower-asset/codemirror": "~5.9.0"
+        "bower-asset/codemirror": "~5.29.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

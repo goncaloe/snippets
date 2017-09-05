@@ -21,7 +21,4 @@ return [
             'errorAction' => 'site/error',
         ],
     ],
-    'aliases' => [
-        '@snippetsUrl' => rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '\/') . '/var/snippets',
-    ],
 ];

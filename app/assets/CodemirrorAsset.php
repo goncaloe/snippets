@@ -11,19 +11,27 @@ use yii\web\AssetBundle;
 
 class CodemirrorAsset extends AssetBundle
 {
-    public $sourcePath = '@app/assets/codemirror';
+    public $sourcePath = '@bower/codemirror';
     public $baseUrl = '@web';
 
     public $css = [
-        'css/codemirror.css'
+        'lib/codemirror.css',
     ];
 
     public $js = [
-        'js/codemirror.js',
-        'js/xml/xml.js',
-        'js/javascript/javascript.js',
-        'js/css/css.js',
-        'js/htmlmixed/htmlmixed.js'
+        'lib/codemirror.js',
+
+        'mode/css/css.js',
+        'mode/javascript/javascript.js',
+        'mode/php/php.js',
+        'mode/sass/sass.js',
+        'mode/xml/xml.js',
+        'mode/htmlmixed/htmlmixed.js',
+
+        'addon/fold/xml-fold.js',
+        'addon/edit/matchbrackets.js',
+        'addon/edit/closebrackets.js',
+        'addon/edit/closetag.js',
     ];
 
 }

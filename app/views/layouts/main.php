@@ -40,6 +40,9 @@ AppAsset::register($this);
                 <a class="btn btn-default" href="<?= Url::to(['snippets/create'])?>">Create Snippet</a>
             </li>
             -->
+            <li>
+                <a class="btn btn-default" href="<?= Url::to(['snippets/tools'])?>">Tools</a>
+            </li>
         </ul>
 
         <? /*

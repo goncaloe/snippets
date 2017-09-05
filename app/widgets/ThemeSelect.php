@@ -21,12 +21,15 @@ class ThemeSelect extends \yii\base\Widget
                             });
                         ");
 
-        $currTheme = Yii::$app->getCurrentTheme();
+        $snippets = Yii::$app->getSnippets();
+
+
+        $currTheme = $snippets->getCurrentTheme();
 
         $html = '<section id="theme_select_wrap">';
         $html .= '<label>Theme</label> ';
         $html .= '<select id="theme_select">';
-        foreach(Yii::$app->getThemes() as $theme => $name) {
+        foreach($snippets->getThemes() as $theme => $name) {
             $html .= '<option value="' . $theme . '"'. ($theme == $currTheme ? ' selected' : '') . '>' . $name . '</option>';
         }
         $html .= '</select>';

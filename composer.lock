@@ -4,8 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "fca2241d9982c343e9adefea35a10310",
+    "content-hash": "d0759f209c1914d8d705bcfbaa0c04c9",
     "packages": [
+        {
+            "name": "bower-asset/codemirror",
+            "version": "5.29.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/codemirror.git",
+                "reference": "49991b42979a3d089a5558c1fa0db26a75872f5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/codemirror/zipball/49991b42979a3d089a5558c1fa0db26a75872f5a",
+                "reference": "49991b42979a3d089a5558c1fa0db26a75872f5a",
+                "shasum": null
+            },
+            "type": "bower-asset"
+        },
         {
             "name": "bower-asset/inputmask",
             "version": "3.3.8",
@@ -198,12 +214,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-framework.git",
-                "reference": "a407a75d927ec2060bb012ced9ec98c4177f56e3"
+                "reference": "e8a915d22125597ea459a3418031fa46cf13c5c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/a407a75d927ec2060bb012ced9ec98c4177f56e3",
-                "reference": "a407a75d927ec2060bb012ced9ec98c4177f56e3",
+                "url": "https://api.github.com/repos/yiisoft/yii2-framework/zipball/e8a915d22125597ea459a3418031fa46cf13c5c9",
+                "reference": "e8a915d22125597ea459a3418031fa46cf13c5c9",
                 "shasum": ""
             },
             "require": {
@@ -290,7 +306,7 @@
                 "framework",
                 "yii2"
             ],
-            "time": "2017-09-01 21:49:53"
+            "time": "2017-09-05 10:23:43"
         },
         {
             "name": "yiisoft/yii2-composer",
@@ -386,56 +402,6 @@
             "type": "bower-asset"
         },
         {
-            "name": "fzaninotto/faker",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "c3f82846fdfd1760b277767ac21426ca030f795e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/c3f82846fdfd1760b277767ac21426ca030f795e",
-                "reference": "c3f82846fdfd1760b277767ac21426ca030f795e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0"
-            },
-            "require-dev": {
-                "ext-intl": "*",
-                "phpunit/phpunit": "^4.0 || ^5.0",
-                "squizlabs/php_codesniffer": "^1.5"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.8-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Faker\\": "src/Faker/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Zaninotto"
-                }
-            ],
-            "description": "Faker is a PHP library that generates fake data for you.",
-            "keywords": [
-                "data",
-                "faker",
-                "fixtures"
-            ],
-            "time": "2017-08-30T09:14:20+00:00"
-        },
-        {
             "name": "phpspec/php-diff",
             "version": "dev-master",
             "source": {
@@ -471,7 +437,7 @@
                 }
             ],
             "description": "A comprehensive library for generating differences between two hashable objects (strings or arrays).",
-            "time": "2016-04-07T12:29:16+00:00"
+            "time": "2016-04-07 12:29:16"
         },
         {
             "name": "yiisoft/yii2-bootstrap",
@@ -517,7 +483,7 @@
                 "bootstrap",
                 "yii2"
             ],
-            "time": "2017-08-02T13:52:13+00:00"
+            "time": "2017-08-02 13:52:13"
         },
         {
             "name": "yiisoft/yii2-debug",
@@ -525,12 +491,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yiisoft/yii2-debug.git",
-                "reference": "51fa1ddbe0356903eb0d6d54d47cc7bd2dc6bb82"
+                "reference": "8cc10206d1633d2b2288135841a9f232f2b78d33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/51fa1ddbe0356903eb0d6d54d47cc7bd2dc6bb82",
-                "reference": "51fa1ddbe0356903eb0d6d54d47cc7bd2dc6bb82",
+                "url": "https://api.github.com/repos/yiisoft/yii2-debug/zipball/8cc10206d1633d2b2288135841a9f232f2b78d33",
+                "reference": "8cc10206d1633d2b2288135841a9f232f2b78d33",
                 "shasum": ""
             },
             "require": {
@@ -564,54 +530,7 @@
                 "debugger",
                 "yii2"
             ],
-            "time": "2017-08-20T16:59:36+00:00"
-        },
-        {
-            "name": "yiisoft/yii2-faker",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/yiisoft/yii2-faker.git",
-                "reference": "ed09caef15777a867f386158f84ea75b84053dff"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/yiisoft/yii2-faker/zipball/ed09caef15777a867f386158f84ea75b84053dff",
-                "reference": "ed09caef15777a867f386158f84ea75b84053dff",
-                "shasum": ""
-            },
-            "require": {
-                "fzaninotto/faker": "~1.4",
-                "yiisoft/yii2": "~2.0.0"
-            },
-            "type": "yii2-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "yii\\faker\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Mark Jebri",
-                    "email": "mark.github@yandex.ru"
-                }
-            ],
-            "description": "Fixture generator. The Faker integration for the Yii framework.",
-            "keywords": [
-                "Fixture",
-                "faker",
-                "yii2"
-            ],
-            "time": "2017-08-02T13:01:06+00:00"
+            "time": "2017-09-04T09:43:21+00:00"
         },
         {
             "name": "yiisoft/yii2-gii",
@@ -664,7 +583,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2017-09-01T10:00:13+00:00"
+            "time": "2017-09-01 10:00:13"
         }
     ],
     "aliases": [],

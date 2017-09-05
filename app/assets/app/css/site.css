@@ -218,8 +218,8 @@ h1 {
     padding: 6px;
 
 }
-.snippet-header .title {
-
+.snippet-link {
+    font-size: 16px;
 }
 
 .snippet-buttons {
@@ -259,6 +259,9 @@ h1 {
 
 }
 
+#open_iframe {
+    text-decoration: underline;
+}
 
 
 .snippet-frame {

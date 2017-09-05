@@ -24,8 +24,7 @@ Yii::$container = new yii\di\Container;
 
 Yii::setAlias('@app', APP_BASE_PATH . '/app');
 Yii::setAlias('@console', APP_BASE_PATH . '/console');
-Yii::setAlias('@var', APP_BASE_PATH.'/var');
-//Yii::setAlias('@vendor', APP_BASE_PATH.'/vendor');
+Yii::setAlias('@data', APP_BASE_PATH.'/data');
 
 if(!function_exists('p')){
     function p($a, $d = 5){
