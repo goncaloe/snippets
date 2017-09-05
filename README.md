@@ -39,6 +39,7 @@ Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
 ### 3. File Permissions
 
 Give write permissions to following folders:
+
     app/runtime
     data/
     web/
@@ -62,6 +63,7 @@ SNIPPETS
 ------------
 
 Each snippet is a folder in data/snippets/[SNIPPET_DIR] and have the following structure:
+
       snippet.json           contains the snippet meta data
       index.html             contains the snippet html
       index.css              [optional] contains the styles of the snippet
@@ -81,6 +83,7 @@ THEMES
 ------------
 
 Each theme is a folder in data/themes/[THEME_DIR] and have the following structure:
+
       theme.json           contains the snippet meta data
       css/                 [optional] contains all the css files of the theme
       js/                  [optional] contains the javascript files of the theme
