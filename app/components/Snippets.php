@@ -58,7 +58,7 @@ class Snippets extends \yii\base\Component
                 $content = file_get_contents($metaFile);
                 $res = @json_decode($content, true);
                 if(!empty($res)){
-                    $this->_themes[$file] = (!empty($res['name']) ? $res['name'] : $file);
+                    $this->_themes[$file] = $res;
                 }
             }
             closedir($handle);
