@@ -24,9 +24,11 @@ class SnippetsController extends Controller
     public function actionList()
     {
         $request = Yii::$app->getRequest();
+        $snippetsManager = Yii::$app->getSnippets();
+
 
         if($theme = $request->get('theme')){
-            Yii::$app->getSnippets()->setCurrentTheme($theme);
+            $snippetsManager->setCurrentTheme($theme);
         }
 
         $query = new Query();
@@ -35,6 +37,9 @@ class SnippetsController extends Controller
         if($tag = $request->get('tag')){
             $query->innerJoin('snippet_tags t', 't.snippet_id = s.id AND t.tag_id = :tag', [':tag' => $tag]);
         }
+
+        $fw = $snippetsManager->getCurrentFramework();
+        $query->where(['s.framework' => $fw]);
 
         $count = $query->count();
 
@@ -78,7 +83,7 @@ class SnippetsController extends Controller
 
         $indexFile = $snippetPath.'/index.html';
         if(!file_exists($indexFile)){
-            throw new Exception("File iframe index '$indexFile' not exists.");
+            throw new Exception("File iframe index '$indexFile' does not exists.");
         }
 
         $contentHtml = file_get_contents($indexFile);
@@ -107,6 +112,44 @@ class SnippetsController extends Controller
             'contentJs' => $contentJs,
             'contentCss' => $contentCss,
         ]);
+    }
+
+    public function actionUpdate($id)
+    {
+        $request = Yii::$app->getRequest();
+
+        $snippetsManager = Yii::$app->getSnippets();
+        $snippetPath = $snippetsManager->basePath.'/'.$id;
+
+        $indexFile = $snippetPath.'/index.html';
+        if(!file_exists($indexFile)){
+            throw new Exception("File iframe index '$indexFile' does not exists.");
+        }
+
+
+        if(($html = $request->post('html')) !== null){
+            file_put_contents($indexFile, $html);
+        }
+        elseif(($css = $request->post('css')) !== null){
+            $cssFile = $snippetPath.'/index.css';
+            if(trim($css) == ""){
+                unlink($cssFile);
+            }
+            else {
+                file_put_contents($cssFile, $css);
+            }
+        }
+        elseif(($js = $request->post('js')) != null){
+            $jsFile = $snippetPath.'/index.js';
+            if(trim($js) == ""){
+                unlink($jsFile);
+            }
+            else {
+                file_put_contents($jsFile, $js);
+            }
+        }
+
+        return $this->redirect(['/snippets/view', 'id' => $id]);
     }
 
     public function actionIframe($id)
@@ -222,7 +265,8 @@ class SnippetsController extends Controller
                 $db->createCommand()->update('snippets', [
                     'id' => $snippetId,
                     'name' => isset($meta['name']) ? $meta['name'] : ucfirst($snippetId),
-                    'fw' => isset($meta['framework']) ? $meta['framework'] : 'bs3',
+                    'framework' => isset($meta['framework']) ? $meta['framework'] : 'bs3',
+                    'created_at' => isset($meta['date']) ? strtotime($meta['date']) : time(),
                 ], ['id' => $snippetId])->execute();
 
                 $sTags = (new Query())

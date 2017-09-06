@@ -1,6 +1,8 @@
 <?php
 use yii\helpers\Url;
+use yii\helpers\Html;
 use app\assets\CodemirrorAsset;
+use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 
 $this->title = 'Snippet '.$snippet['name'];
@@ -31,19 +33,25 @@ CodemirrorAsset::register($this);
 
     <div id="editors_content">
         <div class="tab-content" id="html_content">
-            <textarea id="html_editor" style="display:none;"><?= $contentHtml ?></textarea>
+            <? $form = ActiveForm::begin(['action' => ['/snippets/update', 'id' => $snippet['id']]]) ?>
+                <textarea class="form-editor" id="html_editor" name="html" style="display:none;"><?= Html::encode($contentHtml) ?></textarea>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            <? ActiveForm::end(); ?>
         </div>
         <? if($contentCss): ?>
             <div class="tab-content" id="css_content">
-                <textarea id="css_editor" style="display:none;"><?= $contentCss ?></textarea>
+                <? $form = ActiveForm::begin(['action' => ['/snippets/update', 'id' => $snippet['id']]]) ?>
+                    <textarea class="form-editor" id="css_editor" name="css" style="display:none;"><?= Html::encode($contentCss) ?></textarea>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                <? ActiveForm::end(); ?>
             </div>
         <? endif; ?>
         <? if($contentJs): ?>
             <div class="tab-content" id="js_content">
-                <form>
-                    <textarea id="js_editor" style="display:none;"><?= $contentJs ?></textarea>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </form>
+                <? $form = ActiveForm::begin(['action' => ['/snippets/update', 'id' => $snippet['id']]]) ?>
+                    <textarea class="form-editor" id="js_editor" name="js" style="display:none;"><?= Html::encode($contentJs) ?></textarea>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                <? ActiveForm::end(); ?>
             </div>
         <? endif; ?>
     </div>
