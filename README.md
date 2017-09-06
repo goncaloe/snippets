@@ -4,17 +4,20 @@ Tool to manage local HTML snippets
 DIRECTORY STRUCTURE
 -------------------
 
-      app/assets/             contains assets definition
-      app/config/             contains application configurations
-      app/controllers/        contains Web controller classes
-      app/models/             contains model classes
-      app/runtime/            contains files generated during runtime
-      app/views/              contains view files for the Web application
-      data/snippets           contains all the snippets
-      data/themes             contains all the themes of snippets
-      vendor/                 contains dependent 3rd-party packages
-      web/                    contains the entry script and Web resources
-
+```
+app/
+      assets/             contains assets definition
+      config/             contains application configurations
+      controllers/        contains Web controller classes
+      models/             contains model classes
+      runtime/            contains files generated during runtime
+      views/              contains view files for the Web application
+data/
+      snippets/           contains all the snippets
+      themes/             contains all the themes of snippets
+vendor/                   contains dependent 3rd-party packages
+web/                      contains the entry script and Web resources
+```
 
 INSTALLATION
 ------------
@@ -40,9 +43,11 @@ Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
 
 Give write permissions to following folders:
 
-    app/runtime
-    data/
-    web/
+```
+app/runtime/
+data/
+web/assets
+```
 
 ### 4. Database
 
@@ -84,10 +89,11 @@ THEMES
 
 Each theme is a folder in data/themes/[THEME_DIR] and have the following structure:
 
-      theme.json           contains the snippet meta data
-      css/                 [optional] contains all the css files of the theme
-      js/                  [optional] contains the javascript files of the theme
-
+```
+theme.json           contains the snippet meta data
+css/                 [optional] contains all the css files of the theme
+js/                  [optional] contains the javascript files of the theme
+```
 
 The theme.json can have the following data:
 ```
