@@ -10,20 +10,18 @@ class m170824_102030_install extends Migration
     {
         $this->createTable('tags', [
             'id' => $this->string(32)->notNull(),
-            'color' => $this->string(32)->notNull(),
-            'position' => $this->smallInteger(8)->unsigned()->notNull()->defaultValue(0),
+            'position' => $this->smallInteger(8)->unsigned()->defaultValue(0),
             'PRIMARY KEY (id)',
-        ], $this->tableOptions);
+        ]);
         $this->createIndex('index_2', 'tags', ['position'], false);
-
 
         $this->createTable('snippets', [
             'id' => $this->string(32)->notNull(),
-            'name' => $this->string(128)->notNull(),
-            'framework' => $this->string(24)->notNull(),
-            'created_at' => $this->smallInteger(11)->unsigned()->notNull()->defaultValue(0),
+            'name' => $this->string(128),
+            'framework' => $this->string(24),
+            'created_at' => $this->smallInteger(11)->unsigned()->defaultValue(0),
             'PRIMARY KEY (id)',
-        ], $this->tableOptions);
+        ]);
         $this->createIndex('index_2', 'snippets', ['framework'], false);
         $this->createIndex('index_3', 'snippets', ['created_at'], false);
 
@@ -31,7 +29,7 @@ class m170824_102030_install extends Migration
             'snippet_id' => $this->string(32)->notNull(),
             'tag_id' => $this->string(32)->notNull(),
             'PRIMARY KEY (snippet_id, tag_id)',
-        ], $this->tableOptions);
+        ]);
         $this->createIndex('index_2', 'snippet_tags', ['tag_id'], false);
 
     }

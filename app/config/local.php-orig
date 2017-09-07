@@ -14,10 +14,7 @@ $config = [
         ],
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=localhost;dbname=snippets',
-            'username' => 'root',
-            'password' => '',
-            'charset' => 'utf8',
+            'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
         ],
     ],
 ];

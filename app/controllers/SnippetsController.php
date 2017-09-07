@@ -249,6 +249,9 @@ class SnippetsController extends Controller
             $metaTags = !empty($meta['tags']) ? $meta['tags'] : [];
 
             //insert tags
+            $nextPos = (new Query())
+                ->from('tags')
+                ->max('position', $db) + 1;
             foreach ($metaTags as $tag) {
                 $hasTag = (new Query())
                     ->from('tags')
@@ -257,6 +260,7 @@ class SnippetsController extends Controller
                 if (!$hasTag) {
                     $db->createCommand()->insert('tags', [
                         'id' => $tag,
+                        'position' => $nextPos++,
                     ])->execute();
                 }
             }
@@ -297,6 +301,8 @@ class SnippetsController extends Controller
                 $db->createCommand()->insert('snippets', [
                     'id' => $snippetId,
                     'name' => isset($meta['name']) ? $meta['name'] : ucfirst($snippetId),
+                    'framework' => isset($meta['framework']) ? $meta['framework'] : 'bs3',
+                    'created_at' => isset($meta['date']) ? strtotime($meta['date']) : time(),
                 ])->execute();
 
                 foreach($metaTags as $tag){

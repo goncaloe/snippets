@@ -17,4 +17,9 @@ class Migration extends \yii\db\Migration
         }
         parent::createTable($table, $columns, $options);
     }
+
+    public function createIndex($name, $table, $columns, $unique = false){
+        parent::createIndex($table.'_'.$name, $table, $columns, $unique);
+    }
+
 }
