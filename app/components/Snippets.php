@@ -109,10 +109,6 @@ class Snippets extends \yii\base\Component
         $this->_currentTheme = ($data ? $data : ['bs3', 'bs3']);
     }
 
-    public function publish($id){
-        //todo
-    }
-
     public function renderIframe($id, $params = [])
     {
         $snippetPath = $this->basePath.'/'.$id;
@@ -127,6 +123,9 @@ class Snippets extends \yii\base\Component
         $am = Yii::$app->getAssetManager();
 
         $content = file_get_contents($indexFile);
+        if (preg_match('~<body[^>]*>(.*?)</body>~is', $content, $match)) {
+            $content = $match[1];
+        }
         $content = str_replace('{snippetUrl}', $snippetUrl, $content);
 
         $js = [];
@@ -172,7 +171,7 @@ class Snippets extends \yii\base\Component
         $html .= '<meta charset="utf-8">';
         $html .= '<title>iFrame</title>';
         $html .= '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
-        $html .= '<meta name="viewport" content="width=device-width, initial-scale=1">';
+        $html .= '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
         foreach($js as $jsFile){
             $html .= '<script src="'.$jsFile.'"></script>';
         }

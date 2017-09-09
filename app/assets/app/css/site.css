@@ -155,6 +155,10 @@ SIDEBAR WIDGETS
     font-size: 14px;
     font-weight: normal;
 }
+#theme_select_wrap select {
+    padding: 5px;
+}
+
 
 #filter_wrap
 {
@@ -197,6 +201,25 @@ h1 {
     font-size: 22px;
 }
 
+table.datalist {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+table.datalist th, table.datalist td {
+    text-align: left;
+    padding: 8px;
+}
+table.datalist th{
+    background-color: #e0e0e0;
+}
+table.datalist td.actions {
+    text-align: right;
+}
+table.datalist tr:nth-child(even){
+    background-color: #f2f2f2;
+}
 
 
 
@@ -262,7 +285,7 @@ h1 {
 .snippet-frame {
     border: 0;
     width: 100%;
-    min-height: 40px;
+    min-height: 42px;
     height: 100%;
     margin: 0 auto 20px auto;
     transform: scale(1);
@@ -323,7 +346,7 @@ h1 {
 
 
 .btn {
-    background-color: #005977;
+    background-color: #00769c;
     color: #fff;
 
     display: inline-block;
@@ -345,7 +368,13 @@ h1 {
     background-image: none;
     border-radius: 4px;
 }
-
+.btn:active, .btn:hover {
+    background-color: #006f95;
+    color: #e9f5ff;
+}
+.btn.active {
+    background-color: #00516d;
+}
 
 
 
@@ -361,4 +390,21 @@ h1 {
     vertical-align: baseline;
     border-radius: .25em;
     background-color: #337ab7;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+.form-control {
+    width: 100%;
+    padding: 7px;
+}
+
+.control-label {
+    font-weight: 600;
+    display: block;
+}
+.help-block {
+    font-size: 13px;
+    color: #ff0000;
 }

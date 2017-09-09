@@ -5,8 +5,12 @@ use yii\helpers\Url;
 
 use yii\helpers\Html;
 use app\assets\AppAsset;
+use app\widgets\Alert;
 
 AppAsset::register($this);
+
+
+$route = Yii::$app->controller->getRoute();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -30,18 +34,16 @@ AppAsset::register($this);
 
         <ul class="navbar-links" id="navbar_site">
             <li>
-                <a class="btn btn-default" href="<?= Url::to(['snippets/list'])?>">Snippets</a>
+                <a class="btn btn-default<? if($route == "snippets/list"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/list'])?>">Snippets</a>
             </li>
             <li>
-                <a class="btn btn-default" href="<?= Url::to(['snippets/tags'])?>">Tags</a>
+                <a class="btn btn-default<? if($route == "snippets/tags"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/tags'])?>">Tags</a>
             </li>
-            <!--
             <li>
-                <a class="btn btn-default" href="<?= Url::to(['snippets/create'])?>">Create Snippet</a>
+                <a class="btn btn-default<? if(in_array($route, ["snippets/manage", "snippets/create", "snippets/edit"])): ?> active<? endif; ?>" href="<?= Url::to(['snippets/manage'])?>">Manage</a>
             </li>
-            -->
             <li>
-                <a class="btn btn-default" href="<?= Url::to(['snippets/tools'])?>">Tools</a>
+                <a class="btn btn-default<? if($route == "snippets/tools"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/tools'])?>">Tools</a>
             </li>
         </ul>
 
@@ -72,6 +74,7 @@ AppAsset::register($this);
         </aside>
 
         <article id="main_content">
+            <?= Alert::widget(); ?>
             <?= $content ?>
         </article>
     </div>

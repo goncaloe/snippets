@@ -5,8 +5,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 
-$this->title = 'Create Snippet';
-
+$this->title = 'Edit Snippet '.$snippet->id;
 
 ?>
 
@@ -16,7 +15,7 @@ $this->title = 'Create Snippet';
     
     <? $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($snippet, 'id') ?>
+    <?= $form->field($snippet, 'id')->textInput(['disabled' => true]) ?>
     <?= $form->field($snippet, 'name') ?>
     <?= $form->field($snippet, 'tags')->textInput(['placeholder' => 'tag1, tags2']) ?>
     <?= $form->field($snippet, 'createdAtText')->textInput(['placeholder' => date('d-m-Y')]) ?>
@@ -30,17 +29,3 @@ $this->title = 'Create Snippet';
     
     <? ActiveForm::end(); ?>
 </div>
-
-<?
-
-$inputId = Html::getInputId($snippet, 'id');
-$this->registerJs("
-var text = '';
-var possible = 'abcdefghijklmnopqrstuvwxyz0123456789';
-for (var i = 0; i < 5; i++){
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-}
-$('#{$inputId}').val(text);
-");
-?>
-
