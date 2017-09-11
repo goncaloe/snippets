@@ -1,4 +1,4 @@
-# snippets
+# Snippets Manager
 Tool to manage local HTML snippets
 
 DIRECTORY STRUCTURE

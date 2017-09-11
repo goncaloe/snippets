@@ -125,20 +125,17 @@ class Snippets extends \yii\base\Component
         $content = file_get_contents($indexFile);
         $content = str_replace('{snippetUrl}', $snippetUrl, $content);
 
+        $headerContent = '';
         if (preg_match('/<body([^>]*)>(.*?)<\/body>/is', $content, $match)) {
             $bodyProperties = $match[1];
             $bodyContent = $match[2];
+            if (preg_match('/<header[^>]*>(.*?)<\/header>/is', $content, $match)) {
+                $headerContent = $match[1];
+            }
         }
         else {
             $bodyProperties = '';
             $bodyContent = $content;
-        }
-
-        if (preg_match('/<header[^>]*>(.*?)<\/header>/is', $content, $match)) {
-            $headerContent = $match[1];
-        }
-        else {
-            $headerContent = '';
         }
 
         $js = [];
@@ -177,9 +174,6 @@ class Snippets extends \yii\base\Component
         if(file_exists($cssFile)){
             $css[] = $snippetUrl.'/index.css';
         }
-        
-        $publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
-        $bodyContent .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
 
         $html = '<!DOCTYPE html>';
         $html .= '<html>';
@@ -197,7 +191,10 @@ class Snippets extends \yii\base\Component
         $html .= $headerContent;
         $html .= '</head>';
         $html .= '<body '.$bodyProperties.'>';
+
         $html .= $bodyContent;
+        $publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
+        $html .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
         $html .= '</body>';
         $html .= '</html>';
         return $html;
