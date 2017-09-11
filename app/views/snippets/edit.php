@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 
-$this->title = 'Edit Snippet '.$snippet->id;
+$this->title = 'Edit Snippet #'.$snippet->id;
 
 ?>
 
@@ -25,6 +25,7 @@ $this->title = 'Edit Snippet '.$snippet->id;
 
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>
+        <a href="<?= Url::toRoute(['snippets/view', 'id' => $snippet->id]) ?>">preview</a>
     </div>
     
     <? ActiveForm::end(); ?>

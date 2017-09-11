@@ -123,10 +123,23 @@ class Snippets extends \yii\base\Component
         $am = Yii::$app->getAssetManager();
 
         $content = file_get_contents($indexFile);
-        if (preg_match('~<body[^>]*>(.*?)</body>~is', $content, $match)) {
-            $content = $match[1];
-        }
         $content = str_replace('{snippetUrl}', $snippetUrl, $content);
+
+        if (preg_match('/<body([^>]*)>(.*?)<\/body>/is', $content, $match)) {
+            $bodyProperties = $match[1];
+            $bodyContent = $match[2];
+        }
+        else {
+            $bodyProperties = '';
+            $bodyContent = $content;
+        }
+
+        if (preg_match('/<header[^>]*>(.*?)<\/header>/is', $content, $match)) {
+            $headerContent = $match[1];
+        }
+        else {
+            $headerContent = '';
+        }
 
         $js = [];
         $css = [];
@@ -164,6 +177,9 @@ class Snippets extends \yii\base\Component
         if(file_exists($cssFile)){
             $css[] = $snippetUrl.'/index.css';
         }
+        
+        $publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
+        $bodyContent .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
 
         $html = '<!DOCTYPE html>';
         $html .= '<html>';
@@ -178,12 +194,11 @@ class Snippets extends \yii\base\Component
         foreach($css as $cssFile){
             $html .= '<link href="'.$cssFile.'" rel="stylesheet">';
         }
+        $html .= $headerContent;
         $html .= '</head>';
-        $html .= '<body>';
-        $html .= $content;
+        $html .= '<body '.$bodyProperties.'>';
+        $html .= $bodyContent;
         $html .= '</body>';
-        $publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
-        $html .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
         $html .= '</html>';
         return $html;
     }

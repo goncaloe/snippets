@@ -5,7 +5,7 @@ use app\assets\CodemirrorAsset;
 use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 
-$this->title = 'Snippet '.$snippet['name'];
+$this->title = 'Snippet #' . $snippet['id'] . ' - ' . $snippet['name'];
 
 CodemirrorAsset::register($this);
 
@@ -14,7 +14,7 @@ CodemirrorAsset::register($this);
 <div class="page-snippets-view">
 
     <div id="page_content">
-        <h1>Snippet <?= $snippet['name'] ?></h1>
+        <h1>Snippet #<?= $snippet['id'] ?> - <?= $snippet['name'] ?></h1>
 
         <div class="snippet-tags">
             <? foreach($tags as $tag): ?>
