@@ -18,8 +18,6 @@ class Snippets extends \yii\base\Component
 
     public $linkSnippets = false;
 
-    public $themes;
-
     /**
      * Initializes the component.
      * @throws InvalidConfigException if [[basePath]] is invalid
@@ -123,7 +121,9 @@ class Snippets extends \yii\base\Component
         $am = Yii::$app->getAssetManager();
 
         $content = file_get_contents($indexFile);
-        $content = str_replace('{snippetUrl}', $snippetUrl, $content);
+
+        $pattern = "/(src|href)=[\"'](?!cdn|http|https|\/\/)(?:\.?\/)?(.*?)[\"']/mi";
+        $content = preg_replace($pattern, "$1=\"{$snippetUrl}/$2\"", $content);
 
         $headerContent = '';
         if (preg_match('/<body([^>]*)>(.*?)<\/body>/ius', $content, $match)) {

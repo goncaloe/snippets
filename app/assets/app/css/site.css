@@ -40,7 +40,7 @@ body {
 
 #body_header {
     width: 100%;
-    background-color: #5287A6;
+    background-color: #457ABB;
     position: fixed;
     top: 0;
     left: 0;
@@ -59,7 +59,7 @@ body {
 #main_sidebar {
     float: left;
     width: 220px;
-    background-color: #eee;
+    background-color: #f5f5f5;
     border-right: 1px solid #dedede;
     overflow-y: auto;
     position:fixed;
@@ -70,6 +70,7 @@ body {
 #main_content {
     height: 100%;
     padding-left:220px;
+    background-color: #e6e6e6;
 }
 
 

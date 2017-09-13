@@ -251,7 +251,6 @@ class SnippetsController extends Controller
 
     public function actionRebuild()
     {
-
         $db = Yii::$app->getDb();
 
         $dbSnippets = (new Query())
@@ -263,12 +262,13 @@ class SnippetsController extends Controller
 
         $handle = opendir($snippetsPath);
 
-        while (($file = readdir($handle)) !== false) {
-            if ($file === '.' || $file === '..') {
+        $foundSnippets = [];
+        while (($snippetId = readdir($handle)) !== false) {
+            if ($snippetId === '.' || $snippetId === '..') {
                 continue;
             }
 
-            $path = $snippetsPath . DIRECTORY_SEPARATOR . $file;
+            $path = $snippetsPath . DIRECTORY_SEPARATOR . $snippetId;
             $metaFile = $path.'/snippet.json';
             if(!is_file($metaFile)){
                 continue;
@@ -279,7 +279,7 @@ class SnippetsController extends Controller
                 continue;
             }
 
-            $snippetId = $file;
+            $foundSnippets[] = $snippetId;
             $metaTags = !empty($meta['tags']) ? $meta['tags'] : [];
 
             //insert tags
@@ -348,6 +348,19 @@ class SnippetsController extends Controller
             }
         }
         closedir($handle);
+
+        foreach($dbSnippets as $snippet){
+            $snippetId = $snippet['id'];
+            if (!in_array($snippetId, $foundSnippets)) {
+                $db->createCommand()->delete('snippets', [
+                    'id' => $snippetId,
+                ])->execute();
+
+                $db->createCommand()->delete('snippet_tags', [
+                    'snippet_id' => $snippetId,
+                ])->execute();
+            }
+        }
 
         return $this->redirect(['/snippets/tools']);
     }
