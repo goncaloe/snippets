@@ -1,8 +1,9 @@
 # Snippets Manager
-Tool to manage local HTML snippets
+Tool to manage local HTML snippets.
+
 With this tool you can save, organize, and preview small snippets of html, css, and javascript and apply themes to each each snippet
 
-[![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)]
+![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)
 
 DIRECTORY STRUCTURE
 -------------------
