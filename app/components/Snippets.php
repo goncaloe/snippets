@@ -3,12 +3,11 @@
 namespace app\components;
 
 use Yii;
-use yii\base\Component;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
-use yii\base\InvalidParamException;
 use yii\helpers\FileHelper;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 class Snippets extends \yii\base\Component
 {
@@ -112,8 +111,14 @@ class Snippets extends \yii\base\Component
         $snippetPath = $this->basePath.'/'.$id;
         $snippetUrl = $this->baseUrl.'/'.$id;
 
-        $indexFile = $snippetPath.'/index.html';
+        $metaFile = $snippetPath.'/snippet.json';
+        if(!file_exists($metaFile)){
+            throw new Exception("Metafile iframe '$metaFile' not exists.");
+        }
+        $mc = file_get_contents($metaFile);
+        $snippetMeta = json_decode($mc, true);
 
+        $indexFile = $snippetPath.'/index.html';
         if(!file_exists($indexFile)){
             throw new Exception("File iframe index '$indexFile' not exists.");
         }
@@ -125,12 +130,12 @@ class Snippets extends \yii\base\Component
         $pattern = "/(src|href)=[\"'](?!cdn|http|https|\/\/)(?:\.?\/)?(.*?)[\"']/mi";
         $content = preg_replace($pattern, "$1=\"{$snippetUrl}/$2\"", $content);
 
-        $headerContent = '';
+        $appendHeader = '';
         if (preg_match('/<body([^>]*)>(.*?)<\/body>/ius', $content, $match)) {
             $bodyProperties = ' '.$match[1];
             $bodyContent = $match[2];
             if (preg_match('/<head[^>]*>(.*?)<\/head>/ius', $content, $match)) {
-                $headerContent = $match[1];
+                $appendHeader = $match[1];
             }
         }
         else {
@@ -148,7 +153,7 @@ class Snippets extends \yii\base\Component
 
         $metaFile = $themePath.'/theme.json';
         $meta = [];
-        if(is_file($metaFile)){
+        if(file_exists($metaFile)){
             $mc = file_get_contents($metaFile);
             $meta = json_decode($mc, true);
         }
@@ -159,8 +164,20 @@ class Snippets extends \yii\base\Component
             }
         }
 
+        if(!empty($snippetMeta['js'])){
+            foreach($snippetMeta['js'] as $path){
+                $js[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
+            }
+        }
+
         if(!empty($meta['css'])){
             foreach($meta['css'] as $path){
+                $css[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
+            }
+        }
+
+        if(!empty($snippetMeta['css'])){
+            foreach($snippetMeta['css'] as $path){
                 $css[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
             }
         }
@@ -175,11 +192,13 @@ class Snippets extends \yii\base\Component
             $css[] = $snippetUrl.'/index.css';
         }
 
+        $title = isset($snippetMeta['name']) ? Html::encode($snippetMeta['name']) : 'iFrame #'.$id;
+
         $html = '<!DOCTYPE html>';
         $html .= '<html>';
         $html .= '<head>';
         $html .= '<meta charset="utf-8">';
-        $html .= '<title>iFrame</title>';
+        $html .= '<title>'.$title.'</title>';
         $html .= '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
         $html .= '<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">';
         foreach($js as $jsFile){
@@ -188,7 +207,7 @@ class Snippets extends \yii\base\Component
         foreach($css as $cssFile){
             $html .= '<link href="'.$cssFile.'" rel="stylesheet">';
         }
-        $html .= $headerContent;
+        $html .= $appendHeader;
         $html .= '</head>';
         $html .= '<body'.$bodyProperties.'>';
         $html .= $bodyContent;
