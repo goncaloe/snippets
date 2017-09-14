@@ -28,7 +28,6 @@ html, body {
     height: 100%;
 }
 body {
-    margin: 0;
     display: block;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -70,16 +69,14 @@ body {
 #main_content {
     height: 100%;
     padding-left:220px;
-    background-color: #e6e6e6;
 }
-
-
 
 #page_content {
-    padding: 20px;
+    padding: 20px 20px 0 20px;
+    background-color: #f9f9f9;
 }
 #editors_content {
-    padding: 0 20px;
+    padding: 20px;
 }
 #editors_content .CodeMirror {
     border: 2px solid #ccc;
@@ -88,6 +85,7 @@ body {
 }
 #iframe_content {
     -webkit-overflow-scrolling: touch;
+    background-color: #ffffff;
 }
 
 
@@ -225,7 +223,7 @@ table.datalist tr:nth-child(even){
 
 
 .snippet-tags{
-    margin: 10px 0;
+    margin: 0 0 20px 0;
 }
 
 
@@ -245,6 +243,10 @@ table.datalist tr:nth-child(even){
     display: block;
     border-bottom: 1px solid #dcdcdc;
     height: 46px;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 .snippet-buttons li {
     list-style-type: none;
@@ -272,7 +274,7 @@ table.datalist tr:nth-child(even){
     border-top: 3px solid #2f5973;
     border-left: 1px solid #dcdcdc;
     border-right: 1px solid #dcdcdc;
-    background-color: #f7f7f7;
+    background-color: #ffffff;
 }
 .tab-content {
 
