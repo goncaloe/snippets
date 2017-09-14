@@ -1,5 +1,8 @@
 # Snippets Manager
 Tool to manage local HTML snippets
+With this tool you can save, organize, and preview small snippets of html, css, and javascript and apply themes to each each snippet
+
+[![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)]
 
 DIRECTORY STRUCTURE
 -------------------
@@ -35,11 +38,7 @@ cd snippets
 composer install
 ~~~
 
-### 2. Configs
-
-Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
-
-### 3. File Permissions
+### 2. File Permissions
 
 Give write permissions to following folders:
 
@@ -49,9 +48,12 @@ data/
 web/assets
 ```
 
-### 4. Database
+### 3. Configs
 
-Create a database. By this moment you should have `config/local.php`. Specify your database connection there.
+Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
+You should Specify your database connection there.
+
+### 4. Database
 
 Then apply migrations by running:
 
@@ -59,7 +61,15 @@ Then apply migrations by running:
 yii migrate
 ```
 
-### 5. Build Indexes
+### 5. Import Snippets
+
+You can import some snippets and themes from github.com/goncaloe/snippets-data repository to data folder:
+
+~~~
+git clone https://github.com/goncaloe/snippets-data data
+~~~
+
+### 6. Build Indexes
 
 Each time you create a new snippet or theme, you should rebuild the index.
 Enter in the tools link and click in "Rebuild Index" button
@@ -74,15 +84,32 @@ Each snippet is a folder in data/snippets/[SNIPPET_DIR] and have the following s
       index.css              [optional] contains the styles of the snippet
       index.js               [optional] contains the javascript of the snippet
 
-The snippet.json can have the following data:
+## snippet.json
+
+The metadata stored in snippet.json can have the following data:
 ```
 {
-    "name": "Creative User Profile",
-    "tags": ["tags", "profile", "bootstrap3"],
-    "date": "2017-09-04 17:16:18",
-    "framework": "bs3"
+    "name": "navbar sticky",
+    "framework": "bs3",
+    "tags": ["navbar", "sticky", "bootstrap3"],
+    "date": "2017-09-04"
 }
 ```
+
+## index.html
+
+You can store all the html in the <body> that you will have in the snippet.
+If you want any external resources as css or javascript, you can put the content as described:
+```
+<head>
+    <script src="http://example.com/external.js"></script>
+    <script src="http://example.com/external.js"></script>
+</head>
+<body>
+    content of snippet will be here
+<body>
+```
+
 
 THEMES
 ------------
@@ -98,10 +125,10 @@ js/                  [optional] contains the javascript files of the theme
 The theme.json can have the following data:
 ```
 {
-    "name": "BS3 default",
+    "name": "lithium",
     "framework": "bs3",
     "css": [
-        "css/bootstrap.css"
+        "css/styles.css"
     ],
     "js": [
         "js/jquery.min.js",
