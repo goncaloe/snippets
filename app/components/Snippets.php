@@ -76,14 +76,20 @@ class Snippets extends \yii\base\Component
     }
 
     public function setCurrentTheme($theme){
-        $themesPath = Yii::getAlias('@data/themes');
-        $metaFile = $themesPath.'/'.$theme.'/theme.json';
-        if(is_file($metaFile)){
-            $content = file_get_contents($metaFile);
-            $meta = @json_decode($content, true);
-            if(!empty($meta['framework'])){
-                $this->_currentTheme = [$theme, $meta['framework']];
-                Yii::$app->getSession()->set('__currentTheme', $this->_currentTheme);
+        if($theme == "@"){
+            $this->_currentTheme = false;
+            Yii::$app->getSession()->set('__currentTheme', $this->_currentTheme);
+        }
+        else {
+            $themesPath = Yii::getAlias('@data/themes');
+            $metaFile = $themesPath.'/'.$theme.'/theme.json';
+            if(is_file($metaFile)){
+                $content = file_get_contents($metaFile);
+                $meta = @json_decode($content, true);
+                if(!empty($meta['framework'])){
+                    $this->_currentTheme = [$theme, $meta['framework']];
+                    Yii::$app->getSession()->set('__currentTheme', $this->_currentTheme);
+                }
             }
         }
     }
@@ -103,7 +109,7 @@ class Snippets extends \yii\base\Component
                 $data = false;
             }
         }
-        $this->_currentTheme = ($data ? $data : ['bs3', 'bs3']);
+        $this->_currentTheme = ($data ? $data : ['@', '']);
     }
 
     public function renderIframe($id, $params = [])
@@ -147,38 +153,39 @@ class Snippets extends \yii\base\Component
         $css = [];
 
         $currTheme = $this->getCurrentTheme();
-        $themePath = Yii::getAlias('@data/themes/'.$currTheme);
-        $publish = $am->publish($themePath);
-        $themeUrl = $publish[1];
+        if($currTheme !== "@") {
+            $themePath = Yii::getAlias('@data/themes/' . $currTheme);
+            $publish = $am->publish($themePath);
+            $themeUrl = $publish[1];
 
-        $metaFile = $themePath.'/theme.json';
-        $meta = [];
-        if(file_exists($metaFile)){
-            $mc = file_get_contents($metaFile);
-            $meta = json_decode($mc, true);
-        }
+            $metaFile = $themePath . '/theme.json';
+            $meta = [];
+            if (file_exists($metaFile)) {
+                $mc = file_get_contents($metaFile);
+                $meta = json_decode($mc, true);
+            }
 
-        if(!empty($meta['js'])){
-            foreach($meta['js'] as $path){
-                $js[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
+            if (!empty($meta['js'])) {
+                foreach ($meta['js'] as $path) {
+                    $js[] = Url::isRelative($path) ? $themeUrl . '/' . $path : $path;
+                }
+            }
+            if (!empty($meta['css'])) {
+                foreach ($meta['css'] as $path) {
+                    $css[] = Url::isRelative($path) ? $themeUrl . '/' . $path : $path;
+                }
             }
         }
 
         if(!empty($snippetMeta['js'])){
             foreach($snippetMeta['js'] as $path){
-                $js[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
-            }
-        }
-
-        if(!empty($meta['css'])){
-            foreach($meta['css'] as $path){
-                $css[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
+                $js[] = Url::isRelative($path) ? $snippetUrl.'/'.$path : $path;
             }
         }
 
         if(!empty($snippetMeta['css'])){
             foreach($snippetMeta['css'] as $path){
-                $css[] = Url::isRelative($path) ? $themeUrl.'/'.$path : $path;
+                $css[] = Url::isRelative($path) ? $snippetUrl.'/'.$path : $path;
             }
         }
 

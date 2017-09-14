@@ -89,6 +89,7 @@ class Snippet extends \yii\db\ActiveRecord
     public function frameworkOptions()
     {
         return [
+            '' => 'Sem Framework',
             'bs3' => 'Bootstrap 3',
             'bs4' => 'Bootstrap 4',
         ];

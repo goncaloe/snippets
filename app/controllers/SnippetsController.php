@@ -3,11 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+
 use yii\web\Controller;
 use yii\base\Exception;
 use yii\web\HttpException;
 use yii\db\Query;
 use yii\data\Pagination;
+use yii\helpers\Url;
 use app\models\Snippet;
 use app\models\Tag;
 
@@ -26,9 +28,9 @@ class SnippetsController extends Controller
         $request = Yii::$app->getRequest();
         $snippetsManager = Yii::$app->getSnippets();
 
-
         if($theme = $request->get('theme')){
             $snippetsManager->setCurrentTheme($theme);
+            return $this->redirect(Url::current(['theme' => null]));
         }
 
         $query = new Query();
@@ -261,7 +263,6 @@ class SnippetsController extends Controller
         $snippetsPath = $snippetsManager->basePath;
 
         $handle = opendir($snippetsPath);
-
         $foundSnippets = [];
         while (($snippetId = readdir($handle)) !== false) {
             if ($snippetId === '.' || $snippetId === '..') {

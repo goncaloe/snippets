@@ -21,7 +21,7 @@ class ThemeSelect extends \yii\base\Widget
         $currTheme = $snippets->getCurrentTheme();
         $themes = $snippets->getThemes();
 
-        $options = [];
+        $options = ['@' => 'Sem Tema'];
         foreach($themes as $themeId => $data){
             $fw = $data['framework'];
             $group = isset($this->frameworkLabels[$fw]) ? $this->frameworkLabels[$fw] : $fw;
