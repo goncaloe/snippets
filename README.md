@@ -1,7 +1,8 @@
 # Snippets Manager
-Tool to manage local HTML snippets.
+Tool to manage local HTML snippets written in PHP (based on yii2).
 
-With this tool you can save, organize, and preview small snippets of html, css, and javascript and apply themes to each each snippet
+With this tool you can edit, save, organize, and preview all your small HTML snippets in one place.
+This is the missing tool for designers to organize their snippets.
 
 ![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)
 
@@ -10,12 +11,15 @@ DIRECTORY STRUCTURE
 
 ```
 app/
-      assets/             contains assets definition
+      assets/             contains assets resource files
+      components          containing reusable user components
       config/             contains application configurations
-      controllers/        contains Web controller classes
+      controllers/        contains web controller classes
+      migrations          contains database migrations
       models/             contains model classes
       runtime/            contains files generated during runtime
       views/              contains view files for the Web application
+      widgets/            contains application widgets
 data/
       snippets/           contains all the snippets
       themes/             contains all the themes of snippets
@@ -30,8 +34,7 @@ INSTALLATION
 
 If you do not have [Composer](http://getcomposer.org/), you may install it by following the instructions
 at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
-
-You can then install this application template using the following command:
+You can then install this application using the following commands:
 
 ~~~
 git clone https://github.com/goncaloe/snippets
@@ -51,8 +54,19 @@ web/assets
 
 ### 3. Configs
 
-Copy the file local.php-orig to `.php` without `-orig` and adjust to your needs.
-You should Specify your database connection there.
+Copy the file app/config/local.php-orig to `.php` without `-orig` and adjust to your needs.
+You should specify your database connection there.
+
+```php
+    //...
+    'components' => [
+        //...
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
+        ],
+    ],
+```
 
 ### 4. Database
 
@@ -64,7 +78,7 @@ yii migrate
 
 ### 5. Import Snippets
 
-You can import some snippets and themes from github.com/goncaloe/snippets-data repository to data folder:
+You can import some snippets and themes from [github.com/goncaloe/snippets-data](https://github.com/goncaloe/snippets-data) repository to data folder:
 
 ~~~
 git clone https://github.com/goncaloe/snippets-data data
@@ -78,7 +92,7 @@ Enter in the tools link and click in "Rebuild Index" button
 SNIPPETS
 ------------
 
-Each snippet is a folder in data/snippets/[SNIPPET_DIR] and have the following structure:
+Each snippet is a folder in data/snippets/[SNIPPET_DIR] and has the following structure:
 
       snippet.json           contains the snippet meta data
       index.html             contains the snippet html
@@ -101,7 +115,8 @@ The metadata stored in snippet.json can have the following data:
 
 You can store all the html in the <body> that you will have in the snippet.
 If you want any external resources as css or javascript, you can put the content as described:
-```
+
+```html
 <head>
     <script src="http://example.com/external.js"></script>
     <script src="http://example.com/external.js"></script>
@@ -111,10 +126,11 @@ If you want any external resources as css or javascript, you can put the content
 <body>
 ```
 
-
 THEMES
 ------------
 
+A theme define the context in which snippets are to be showed.
+In the application there is only one theme selected, and only shown snippets whose framework belongs to this theme.
 Each theme is a folder in data/themes/[THEME_DIR] and have the following structure:
 
 ```
