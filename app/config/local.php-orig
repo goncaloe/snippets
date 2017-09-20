@@ -12,10 +12,6 @@ $config = [
                 ],
             ],
         ],
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
-        ],
     ],
 ];
 

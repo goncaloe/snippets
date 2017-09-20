@@ -34,16 +34,13 @@ $route = Yii::$app->controller->getRoute();
 
         <ul class="navbar-links" id="navbar_site">
             <li>
-                <a class="btn btn-default<? if($route == "snippets/list"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/list'])?>">Snippets</a>
+                <a class="<? if($route == "snippets/list"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/list'])?>">Snippets</a>
             </li>
             <li>
-                <a class="btn btn-default<? if($route == "snippets/tags"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/tags'])?>">Tags</a>
+                <a class="<? if(in_array($route, ["snippets/manage", "snippets/create", "snippets/edit"])): ?> active<? endif; ?>" href="<?= Url::to(['snippets/manage'])?>">Manage</a>
             </li>
             <li>
-                <a class="btn btn-default<? if(in_array($route, ["snippets/manage", "snippets/create", "snippets/edit"])): ?> active<? endif; ?>" href="<?= Url::to(['snippets/manage'])?>">Manage</a>
-            </li>
-            <li>
-                <a class="btn btn-default<? if($route == "snippets/tools"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/tools'])?>">Tools</a>
+                <a class="<? if($route == "snippets/tools"): ?> active<? endif; ?>" href="<?= Url::to(['snippets/tools'])?>">Tools</a>
             </li>
         </ul>
 

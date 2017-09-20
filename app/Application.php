@@ -46,7 +46,6 @@ class Application extends \yii\web\Application
         return $this->get('snippets');
     }
 
-
     /**
      * @inheritdoc
      */

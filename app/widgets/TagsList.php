@@ -13,25 +13,53 @@ class TagsList extends \yii\base\Widget
     public function run()
     {
         $request = Yii::$app->getRequest();
-        $currTag = $request->get('tag');
+        $reqTags = $request->get('tags');
+        $reqTags = $reqTags ? preg_split('/\s*[,;]\s*/', $reqTags, null, PREG_SPLIT_NO_EMPTY) : [];
 
-        $fw = Yii::$app->getSnippets()->getCurrentFramework();
+        $snippetsManager = Yii::$app->getSnippets();
+        $cache = Yii::$app->getCache();
 
-        $query = new Query();
-        $query
-            ->select(['t.*', 'COUNT(st.snippet_id) AS count'])
-            ->from('tags t')
-            ->innerJoin('snippet_tags st', 'st.tag_id = t.id')
-            ->innerJoin('snippets s', 's.id =  st.snippet_id')
-            ->where(['s.framework' => $fw])
-            ->groupBy('t.id');
-        $tags = $query->all();
+        $fw = $snippetsManager->getCurrentFramework();
+
+        $cacheKey = 'tags.'.$fw.'.'.implode(';', $reqTags);
+        $tags = $cache->get($cacheKey);
+
+        if($tags === false){
+            $list = $snippetsManager->getSnippets();
+            $tags = [];
+            foreach($list as $id => $s){
+                if(!isset($s['framework']) || $s['framework'] !== $fw){
+                    continue;
+                }
+
+                if(!empty($s['tags'])){
+                    foreach($s['tags'] as $tag) {
+                        $tags[$tag] = isset($tags[$tag]) ? $tags[$tag] + 1 : 1;
+                    }
+                }
+            }
+            asort($tags);
+            $tags = array_reverse($tags, true);
+            $cache->set($cacheKey, $tags, 3600);
+        }
 
         $html = '<section id="tags_wrap">';
         $html .= '<h2>tags <span class="tags-count">'.count($tags).'</span></h2>';
         $html .= '<ul class="tags-list">';
-        foreach($tags as $tag){
-            $html .= '<li'.($currTag == $tag['id'] ? ' class="active"' : '').'><a href="'.Url::toRoute(['/snippets/list', 'tag' => $tag['id']]).'">'.$tag['id'].' <span class="count">'.$tag['count'].'</span></a></li>';
+        foreach($tags as $tag => $count){
+            $addTags = $reqTags;
+            $isActive = in_array($tag, $reqTags);
+            if($isActive){
+                if (($key = array_search($tag, $addTags)) !== false) {
+                    unset($addTags[$key]);
+                }
+            }
+            else {
+                $addTags[] = $tag;
+                $addTags = array_unique($addTags);
+            }
+            $urlTag = Url::toRoute(['/snippets/list', 'tags' => empty($addTags) ? null : implode(',', $addTags)]);
+            $html .= '<li'.($isActive ? ' class="active"' : '').'><a href="'.$urlTag.'">'.$tag.' <span class="count">'.$count.'</span></a></li>';
         }
 
         $html .= '</ul>';

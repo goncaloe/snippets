@@ -14,7 +14,7 @@ use yii\db\Query;
  * @property string $framework
  * @property int $created_at
  */
-class Snippet extends \yii\db\ActiveRecord
+class Snippet extends \yii\base\Model
 {
 
     public $html;
@@ -23,13 +23,6 @@ class Snippet extends \yii\db\ActiveRecord
 
     public $tags;
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'snippets';
-    }
 
     /**
      * @inheritdoc
@@ -119,7 +112,7 @@ class Snippet extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         $snippetsManager = Yii::$app->getSnippets();
-        $snippetPath = $snippetsManager->basePath.'/'.$this->id;
+        $snippetPath = $snippetsManager->snippetsPath.'/'.$this->id;
         if(!is_dir($snippetPath)) {
             mkdir($snippetPath);
         }

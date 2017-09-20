@@ -1,7 +1,7 @@
 # Snippets Manager
 Tool to manage local HTML snippets written in PHP (based on yii2).
 
-With this tool you can edit, save, organize, and preview all your small HTML snippets in one place.
+With this tool you can organize, preview, edit and save all your HTML snippets in one place.
 This is the missing tool for designers to organize their snippets.
 
 ![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)
@@ -58,14 +58,14 @@ Copy the file app/config/local.php-orig to `.php` without `-orig` and adjust to 
 You should specify your database connection there.
 
 ```php
+//...
+'components' => [
     //...
-    'components' => [
-        //...
-        'db' => [
-            'class' => 'yii\db\Connection',
-            'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
-        ],
+    'db' => [
+        'class' => 'yii\db\Connection',
+        'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
     ],
+],
 ```
 
 ### 4. Database
@@ -94,10 +94,12 @@ SNIPPETS
 
 Each snippet is a folder in data/snippets/[SNIPPET_DIR] and has the following structure:
 
-      snippet.json           contains the snippet meta data
-      index.html             contains the snippet html
-      index.css              [optional] contains the styles of the snippet
-      index.js               [optional] contains the javascript of the snippet
+```
+snippet.json           contains the snippet meta data
+index.html             contains the snippet html
+index.css              [optional] contains the styles of the snippet
+index.js               [optional] contains the javascript of the snippet
+```
 
 ## snippet.json
 

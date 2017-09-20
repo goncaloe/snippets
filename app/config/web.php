@@ -5,6 +5,7 @@ return [
     'id' => 'snippets-app',
     'basePath' => APP_BASE_PATH . '/app',
     'vendorPath' => APP_BASE_PATH . '/vendor',
+    'defaultRoute' => 'snippets/list',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation

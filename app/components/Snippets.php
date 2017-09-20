@@ -11,50 +11,61 @@ use yii\helpers\Html;
 
 class Snippets extends \yii\base\Component
 {
-    public $basePath = '@data/snippets';
+    public $snippetsPath = '@data/snippets';
 
-    public $baseUrl = '@web/../data/snippets';
+    public $snippetsUrl = '@web/../data/snippets';
 
+    public $themesPath = '@data/themes';
+
+    public $themesUrl = '@web/../data/themes';
+    
     public $linkSnippets = false;
 
     /**
      * Initializes the component.
-     * @throws InvalidConfigException if [[basePath]] is invalid
+     * @throws InvalidConfigException if [[snippetsPath]] is invalid
      */
     public function init()
     {
         parent::init();
-        $this->basePath = Yii::getAlias($this->basePath);
-        if (!is_dir($this->basePath)) {
-            throw new InvalidConfigException("The directory does not exist: {$this->basePath}");
-        } elseif (!is_writable($this->basePath)) {
-            throw new InvalidConfigException("The directory is not writable by the Web process: {$this->basePath}");
+        $this->snippetsPath = Yii::getAlias($this->snippetsPath);
+        if (!is_dir($this->snippetsPath)) {
+            throw new InvalidConfigException("The directory does not exist: {$this->snippetsPath}");
+        } elseif (!is_writable($this->snippetsPath)) {
+            throw new InvalidConfigException("The directory is not writable by the Web process: {$this->snippetsPath}");
         }
 
-        $this->basePath = realpath($this->basePath);
-        $this->baseUrl = FileHelper::normalizePath(Yii::getAlias($this->baseUrl));
+        $this->snippetsPath = realpath($this->snippetsPath);
+        $this->snippetsUrl = FileHelper::normalizePath(Yii::getAlias($this->snippetsUrl));
+
+        $this->themesPath = Yii::getAlias($this->themesPath);
+        if (!is_dir($this->themesPath)) {
+            throw new InvalidConfigException("The directory does not exist: {$this->themesPath}");
+        } elseif (!is_writable($this->themesPath)) {
+            throw new InvalidConfigException("The directory is not writable by the Web process: {$this->themesPath}");
+        }
+
+        $this->themesPath = realpath($this->themesPath);
+        $this->themesUrl = FileHelper::normalizePath(Yii::getAlias($this->themesUrl));
     }
-
-
+    
     private $_themes;
 
     public function getThemes(){
         if($this->_themes === null){
             $this->_themes = [];
-            $themesPath = Yii::getAlias('@data/themes');
-            $handle = opendir($themesPath);
+            $handle = opendir($this->themesPath);
             while (($file = readdir($handle)) !== false) {
                 if ($file === '.' || $file === '..') {
                     continue;
                 }
-                $path = $themesPath . DIRECTORY_SEPARATOR . $file;
+                $path = $this->themesPath . DIRECTORY_SEPARATOR . $file;
                 $metaFile = $path.'/theme.json';
                 if(!file_exists($metaFile)){
                     throw new Exception('Theme should have a theme.json file');
                 }
                 $content = file_get_contents($metaFile);
-                $res = @json_decode($content, true);
-                if(!empty($res)){
+                if(($res = @json_decode($content, true)) !== null){
                     $this->_themes[$file] = $res;
                 }
             }
@@ -81,8 +92,7 @@ class Snippets extends \yii\base\Component
             Yii::$app->getSession()->set('__currentTheme', $this->_currentTheme);
         }
         else {
-            $themesPath = Yii::getAlias('@data/themes');
-            $metaFile = $themesPath.'/'.$theme.'/theme.json';
+            $metaFile = $this->themesPath.'/'.$theme.'/theme.json';
             if(is_file($metaFile)){
                 $content = file_get_contents($metaFile);
                 $meta = @json_decode($content, true);
@@ -104,18 +114,52 @@ class Snippets extends \yii\base\Component
     private function loadCurrentTheme(){
         $data = Yii::$app->getSession()->get('__currentTheme');
         if(isset($data[0], $data[1])){
-            $themesPath = Yii::getAlias('@data/themes');
-            if(!is_file($themesPath.'/'.$data[0].'/theme.json')){
+            if(!is_file($this->themesPath.'/'.$data[0].'/theme.json')){
                 $data = false;
             }
         }
         $this->_currentTheme = ($data ? $data : ['@', '']);
     }
 
+
+    private $_snippets;
+    
+    public function getSnippets(){
+        if($this->_snippets === null){
+            $this->_snippets = [];
+            $handle = opendir($this->snippetsPath);
+            while (($file = readdir($handle)) !== false) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+                if($data = $this->getSnippetData($file)){
+                    $this->_snippets[$file] = $data;
+                }
+            }
+            closedir($handle);
+        }
+        return $this->_snippets;
+    }
+
+    public function getSnippetData($id){
+        $path = $this->snippetsPath . DIRECTORY_SEPARATOR . $id;
+        $metaFile = $path.'/snippet.json';
+        if(file_exists($metaFile)) {
+            $content = file_get_contents($metaFile);
+            if (($data = @json_decode($content, true)) !== null) {
+                $data['id'] = $id;
+                $data['path'] = $path;
+                $data['date'] = isset($data['date']) ? strtotime($data['date']) : 0;
+                return $data;
+            }
+        }
+        return false;
+    }
+    
     public function renderIframe($id, $params = [])
     {
-        $snippetPath = $this->basePath.'/'.$id;
-        $snippetUrl = $this->baseUrl.'/'.$id;
+        $snippetPath = $this->snippetsPath.'/'.$id;
+        $snippetUrl = $this->snippetsUrl.'/'.$id;
 
         $metaFile = $snippetPath.'/snippet.json';
         if(!file_exists($metaFile)){
@@ -154,7 +198,7 @@ class Snippets extends \yii\base\Component
 
         $currTheme = $this->getCurrentTheme();
         if($currTheme !== "@") {
-            $themePath = Yii::getAlias('@data/themes/' . $currTheme);
+            $themePath = $this->themesPath . '/' . $currTheme;
             $publish = $am->publish($themePath);
             $themeUrl = $publish[1];
 
@@ -218,8 +262,25 @@ class Snippets extends \yii\base\Component
         $html .= '</head>';
         $html .= '<body'.$bodyProperties.'>';
         $html .= $bodyContent;
-        $publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
-        $html .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
+        //$publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
+        //$html .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
+        $html .= '<script type="text/javascript">';
+
+        $h= <<<HTML
+
+        window.addEventListener('DOMContentLoaded', function(e) {
+            var body = document.body,
+            html = document.documentElement;
+
+            var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+console.log(height);
+});
+HTML;
+
+        $html .= '</script>';
+
+
         $html .= '</body>';
         $html .= '</html>';
         return $html;

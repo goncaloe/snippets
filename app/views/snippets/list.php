@@ -19,15 +19,20 @@ $this->title = 'Snippets List';
 
         <? foreach($snippets as $id => $snippet): ?>
         <div class="snippet-item">
-            <div class="snippet-header">
-                <a class="snippet-link" href="<?= Url::toRoute(['snippets/view', 'id' => $id]) ?>"><?= $snippet['name'] ?></a>
-                <div class="snippet-tags">
-                    <? foreach($snippet['tags'] as $tag): ?>
-                        <a href="<?= Url::toRoute(['snippets/list', 'tag' => $tag['tag_id']])?>"><span class="label"><?= $tag['tag_id'] ?></span></a>
-                    <? endforeach; ?>
+            <div class="snippet-header clearfix">
+                <div class="float-left">
+                    <a class="snippet-link" href="<?= Url::toRoute(['/snippets/view', 'id' => $id]) ?>"><?= $snippet['name'] ?></a>
+                    <div class="snippet-tags">
+                        <? foreach($snippet['tags'] as $tag): ?>
+                            <a href="<?= Url::toRoute(['/snippets/list', 'tags' => $tag])?>"><span class="label"><?= $tag ?></span></a>
+                        <? endforeach; ?>
+                    </div>
+                </div>
+                <div class="float-right">
+                    <? if(!empty($snippet['date'])): ?><span class="snippet-date"><?= date('d/m/Y H:i', $snippet['date']);?></span><? endif; ?>
                 </div>
             </div>
-            <iframe class="snippet-frame" style="max-height: 300px;" id="tpl_<?= $id ?>" src="<?= Url::toRoute(['snippets/iframe', 'id' => $id]) ?>"></iframe>
+            <iframe class="snippet-frame" src="<?= Url::toRoute(['snippets/iframe', 'id' => $id]) ?>"></iframe>
         </div>
         <? endforeach; ?>
 
@@ -37,7 +42,5 @@ $this->title = 'Snippets List';
 
 </div>
 <?
-$this->registerJs("
-    iFrameResize({scrolling: true});
-");
+//$this->registerJs(" //iFrameResize({scrolling: true}); ");
 ?>

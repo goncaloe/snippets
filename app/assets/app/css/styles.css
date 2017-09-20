@@ -23,7 +23,6 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
     display: block;
 }
 
-
 html, body {
     height: 100%;
 }
@@ -33,13 +32,13 @@ body {
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #fff;
+    background-color: #f9f9f9;
 }
 
-
+/*LAYOUT*/
 #body_header {
     width: 100%;
-    background-color: #457ABB;
+    background-color: #3d505b;
     position: fixed;
     top: 0;
     left: 0;
@@ -73,39 +72,41 @@ body {
 
 #page_content {
     padding: 20px 20px 0 20px;
-    background-color: #f9f9f9;
 }
 #editors_content {
     padding: 20px;
 }
-#editors_content .CodeMirror {
-    border: 2px solid #ccc;
-    height: 500px;
-    margin-bottom: 14px;
-}
 #iframe_content {
     -webkit-overflow-scrolling: touch;
-    background-color: #ffffff;
 }
 
 
 
-/*
-TOP NAVS
-*/
+
+
+
+
+/* TOP NAVS */
 .navbar-logo {
     float: left;
     font-size: 18px;
+    display: block;
     line-height: 20px;
     width: 220px;
-    padding: 18px;
+    padding: 20px;
     color: #fff;
+    text-align: center;
 }
+.navbar-logo:hover {
+    color: #fff;
+    background-color: rgba(209,209,240,0.1);
+}
+
 
 .navbar-links {
     float: left;
     list-style-type: none;
-    margin: 0;
+    margin: 0 0 0 10px;
     padding: 0;
 }
 .navbar-links li {
@@ -114,13 +115,30 @@ TOP NAVS
     margin-right: 4px;
 }
 
+.navbar-links a {
+    color: #e4faff;
+    padding: 6px 8px;
+    margin: 4px 2px;
+    font-size: 14px;
+    border-radius: 4px;
+}
+.navbar-links a:hover {
+    background-color: rgba(209,209,240,0.2);
+    color: #ffffff;
+}
+.navbar-links a.active {
+    background-color: rgba(209,209,240,0.3);
+    color: #ffffff;
+}
+
 #navbar_site {
-    margin: 12px 0 0 0;
+    float: right;
+    margin: 18px 20px 0 0;
 }
 
 #navbar_account {
     float: right;
-    margin: 12px 12px 0 0;
+    margin: 18px 12px 0 0;
 }
 
 
@@ -186,6 +204,11 @@ SIDEBAR WIDGETS
 
 
 
+
+
+
+
+/* TYPOGRAPHY */
 a {
     outline: none;
     text-decoration: none;
@@ -198,6 +221,33 @@ a:hover {
 h1 {
     margin-bottom: 14px;
     font-size: 22px;
+}
+h1 > small {
+    font-size: 80%;
+    color: #777;
+}
+h1 > small:before {
+    content: "/ ";
+    padding: 0 5px;
+    color: #ccc;
+}
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.float-left {
+    float: left;
+}
+.float-right {
+    float: right;
+}
+
+.CodeMirror {
+    height: 470px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid #ccc;
 }
 
 table.datalist {
@@ -216,9 +266,13 @@ table.datalist th{
 table.datalist td.actions {
     text-align: right;
 }
+table.datalist tr{
+    background-color: #ffffff;
+}
 table.datalist tr:nth-child(even){
     background-color: #f2f2f2;
 }
+
 
 
 
@@ -226,17 +280,19 @@ table.datalist tr:nth-child(even){
     margin: 0 0 20px 0;
 }
 
-
 .snippet-header {
     background-color: #f6f6f6;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 6px;
-
+}
+.snippet-date {
+    color: #7c7c7c;
+    font-size: 13px;
 }
 .snippet-link {
     font-size: 16px;
+    margin-bottom: 8px;
+    display: block;
 }
 
 .snippet-buttons {
@@ -276,9 +332,6 @@ table.datalist tr:nth-child(even){
     border-right: 1px solid #dcdcdc;
     background-color: #ffffff;
 }
-.tab-content {
-
-}
 
 #open_iframe {
     text-decoration: underline;
@@ -286,16 +339,23 @@ table.datalist tr:nth-child(even){
 
 
 .snippet-frame {
+    display: block;
     border: 0;
     width: 100%;
     min-height: 42px;
-    height: 100%;
-    margin: 0 auto 20px auto;
+    margin: 0;
+    padding: 0;
     transform: scale(1);
 }
-
-.page-snippets-list .snippet-frame {
+.snippet-item {
     border: 1px solid #ccc;
+    margin-bottom: 20px;
+}
+.snippet-item .snippet-frame {
+    height: 250px;
+}
+.snippet-item .snippet-tags {
+    margin-bottom: 0;
 }
 
 .tags-list {

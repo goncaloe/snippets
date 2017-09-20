@@ -11,7 +11,8 @@ use yii\db\Query;
 use yii\data\Pagination;
 use yii\helpers\Url;
 use app\models\Snippet;
-use app\models\Tag;
+use yii\helpers\FileHelper;
+use yii\helpers\VarDumper;
 
 class SnippetsController extends Controller
 {
@@ -19,70 +20,88 @@ class SnippetsController extends Controller
     public $defaultAction = 'list';
 
     /**
-     * Displays about page.
-     *
-     * @return string
+     * @inheritdoc
      */
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            $request = Yii::$app->getRequest();
+            $snippetsManager = Yii::$app->getSnippets();
+
+            if($theme = $request->get('theme')){
+                $snippetsManager->setCurrentTheme($theme);
+                return $this->redirect(Url::current(['theme' => null]));
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+    
     public function actionList()
     {
         $request = Yii::$app->getRequest();
         $snippetsManager = Yii::$app->getSnippets();
 
-        if($theme = $request->get('theme')){
-            $snippetsManager->setCurrentTheme($theme);
-            return $this->redirect(Url::current(['theme' => null]));
-        }
-
-        $query = new Query();
-        $query->from('snippets s');
-
-        if($tag = $request->get('tag')){
-            $query->innerJoin('snippet_tags t', 't.snippet_id = s.id AND t.tag_id = :tag', [':tag' => $tag]);
-        }
-
         $fw = $snippetsManager->getCurrentFramework();
-        $query->where(['s.framework' => $fw]);
+        $reqTags = $request->get('tags');
+        $reqTags = $reqTags ? preg_split('/\s*[,;]\s*/', $reqTags, null, PREG_SPLIT_NO_EMPTY) : [];
 
-        $count = $query->count();
+        $cache = Yii::$app->getCache();
+
+        $cacheKey = 'snippets.'.$fw.'.'.implode(';', $reqTags);
+        $snippets = $cache->get($cacheKey);
+
+        if($snippets === false){
+            $snippets = [];
+            $list = $snippetsManager->getSnippets();
+            foreach($list as $id => $s){
+                if(!isset($s['framework']) || $s['framework'] !== $fw){
+                    continue;
+                }
+
+                if(!empty($reqTags)){
+                    if(empty($s['tags'])){
+                        continue;
+                    }
+                    foreach($reqTags as $tag){
+                        if(!in_array($tag, $s['tags'])){
+                            continue 2;
+                        }
+                    }
+                }
+
+                $snippets[$id] = $s;
+            }
+            $cache->set($cacheKey, $snippets, 3600);
+        }
+
+        $count = count($snippets);
 
         $pagination = new Pagination([
             'defaultPageSize' => 10,
             'totalCount' => $count,
         ]);
-
-        $snippets = $query
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->orderBy('created_at DESC')
-            ->indexBy('id')
-            ->all();
-
-        foreach($snippets as $i => $snippet){
-            $snippets[$i]['tags'] = (new Query())
-                ->from('snippet_tags t')
-                ->where(['t.snippet_id' => $snippet['id']])
-                ->all();
-        }
+        
+        $snippets = array_slice($snippets, $pagination->getOffset(), $pagination->getLimit(), true);
 
         return $this->render('list', [
             'snippets' => $snippets,
             'pagination' => $pagination,
         ]);
     }
-
+    
     public function actionView($id)
     {
-        $snippet = (new Query())
-            ->from('snippets s')
-            ->where(['id' => $id])
-            ->one();
+        $snippetsManager = Yii::$app->getSnippets();
+
+        $snippet = $snippetsManager->getSnippetData($id);
         if(!$snippet){
             throw new HttpException(404, 'Snippet does not exists.');
         }
 
-        $snippetsManager = Yii::$app->getSnippets();
-
-        $snippetPath = $snippetsManager->basePath.'/'.$id;
+        $snippetPath = $snippet['path'];
 
         $indexFile = $snippetPath.'/index.html';
         if(!file_exists($indexFile)){
@@ -103,14 +122,8 @@ class SnippetsController extends Controller
             $contentCss = file_get_contents($cssFile);
         }
 
-        $tags = (new Query())
-            ->from('snippet_tags t')
-            ->where(['t.snippet_id' => $snippet['id']])
-            ->all();
-
         return $this->render('view', [
             'snippet' => $snippet,
-            'tags' => $tags,
             'contentHtml' => $contentHtml,
             'contentJs' => $contentJs,
             'contentCss' => $contentCss,
@@ -160,36 +173,10 @@ class SnippetsController extends Controller
         return Yii::$app->getSnippets()->renderIframe($id);
     }
 
-
-    public function actionTags()
-    {
-        $query = new Query();
-        $query
-            ->select(['t.*', 'COUNT(st.snippet_id) AS count'])
-            ->from('tags t')
-            ->leftJoin('snippet_tags st', 'st.tag_id = t.id')
-            ->groupBy('t.id');
-        $tags = $query->all();
-
-        return $this->render('tags', [
-            'tags' => $tags,
-        ]);
-    }
-
     public function actionManage(){
-        $snippets = Snippet::find()
-            ->orderBy('created_at DESC')
-            ->all();
+        $snippetsManager = Yii::$app->getSnippets();
 
-        // save items
-        $request = Yii::$app->getRequest();
-        if (Snippet::loadMultiple($snippets, $request->post()) && Snippet::validateMultiple($snippets)) {
-            foreach ($snippets as $snippet) {
-                $snippet->save(false, ['position']);
-            }
-            yii::$app->getSession()->setFlash('success', 'Snippets modified successfully.');
-            return $this->refresh();
-        }
+        $snippets = $snippetsManager->getSnippets();
 
         return $this->render('manage', [
             'snippets' => $snippets,
@@ -202,7 +189,7 @@ class SnippetsController extends Controller
         ]);
 
         $request = Yii::$app->getRequest();
-        if ($snippet->load($request->post()) && $snippet->save()) {
+        if ($snippet->load($request->post()) && $snippet->validate()) {
             yii::$app->getSession()->setFlash('success', 'Snippet created successfully.');
             return Yii::$app->getResponse()->redirect(['snippets/edit', 'id' => $snippet->id]);
         }
@@ -219,7 +206,7 @@ class SnippetsController extends Controller
         }
 
         $request = Yii::$app->getRequest();
-        if ($snippet->load($request->post()) && $snippet->save()) {
+        if ($snippet->load($request->post()) && $snippet->validate()) {
             yii::$app->getSession()->setFlash('success', 'Snippet modified successfully.');
             return Yii::$app->getResponse()->redirect(['snippets/edit', 'id' => $id]);
         }
@@ -246,24 +233,37 @@ class SnippetsController extends Controller
 
     public function actionTools()
     {
-        return $this->render('tools', [
-        ]);
+        return $this->render('tools', []);
     }
 
 
-    public function actionRebuild()
+    public function actionClearCache()
     {
-        $db = Yii::$app->getDb();
+        $cache = Yii::$app->getCache();
+        if(isset($cache->cachePath)){
+            FileHelper::removeDirectory($cache->cachePath);
+        }
 
-        $dbSnippets = (new Query())
-            ->from('snippets s')
-            ->indexBy('id')
-            ->all($db);
+        return $this->redirect(['/snippets/tools']);
+    }
+
+    /*
+    public function actionRebuild2()
+    {
+
         $snippetsManager = Yii::$app->getSnippets();
         $snippetsPath = $snippetsManager->basePath;
 
+        $cachePath = Yii::$app->getRuntimePath() . '/snippets';
+        if (!is_dir($cachePath)) {
+            FileHelper::createDirectory($cachePath, 0775, true);
+        }
+
+        $tagIndexFile = Yii::$app->getRuntimePath().'/snippets/tags.php';
+        $tagIndex = is_file($tagIndexFile) ? include($tagIndexFile) : [];
+
         $handle = opendir($snippetsPath);
-        $foundSnippets = [];
+        $tags = [];
         while (($snippetId = readdir($handle)) !== false) {
             if ($snippetId === '.' || $snippetId === '..') {
                 continue;
@@ -280,90 +280,25 @@ class SnippetsController extends Controller
                 continue;
             }
 
-            $foundSnippets[] = $snippetId;
-            $metaTags = !empty($meta['tags']) ? $meta['tags'] : [];
-
-            //insert tags
-            $nextPos = (new Query())
-                ->from('tags')
-                ->max('position', $db) + 1;
-            foreach ($metaTags as $tag) {
-                $hasTag = (new Query())
-                    ->from('tags')
-                    ->where(['id' => $tag])
-                    ->exists($db);
-                if (!$hasTag) {
-                    $db->createCommand()->insert('tags', [
-                        'id' => $tag,
-                        'position' => $nextPos++,
-                    ])->execute();
-                }
-            }
-
-            if(isset($dbSnippets[$snippetId])){
-                $db->createCommand()->update('snippets', [
-                    'id' => $snippetId,
-                    'name' => isset($meta['name']) ? $meta['name'] : ucfirst($snippetId),
-                    'framework' => isset($meta['framework']) ? $meta['framework'] : 'bs3',
-                    'created_at' => isset($meta['date']) ? strtotime($meta['date']) : time(),
-                ], ['id' => $snippetId])->execute();
-
-                $sTags = (new Query())
-                    ->select(['tag_id'])
-                    ->from('snippet_tags')
-                    ->where(['snippet_id' => $snippetId])
-                    ->column($db);
-
-                foreach($metaTags as $tag) {
-                    if (!in_array($tag, $sTags)) {
-                        $db->createCommand()->insert('snippet_tags', [
-                            'snippet_id' => $snippetId,
-                            'tag_id' => $tag,
-                        ])->execute();
-                    }
-                }
-
-                foreach($sTags as $tag) {
-                    if (!in_array($tag, $metaTags)) {
-                        $db->createCommand()->delete('snippet_tags', [
-                            'snippet_id' => $snippetId,
-                            'tag_id' => $tag,
-                        ])->execute();
-                    }
-                }
-            }
-            else {
-                $db->createCommand()->insert('snippets', [
-                    'id' => $snippetId,
-                    'name' => isset($meta['name']) ? $meta['name'] : ucfirst($snippetId),
-                    'framework' => isset($meta['framework']) ? $meta['framework'] : 'bs3',
-                    'created_at' => isset($meta['date']) ? strtotime($meta['date']) : time(),
-                ])->execute();
-
-                foreach($metaTags as $tag){
-                    $db->createCommand()->insert('snippet_tags', [
-                        'snippet_id' => $snippetId,
-                        'tag_id' => $tag,
-                    ])->execute();
+            if(!empty($meta['tags'])){
+                foreach ($meta['tags'] as $tag) {
+                    $tags[$tag][] = $snippetId;
                 }
             }
         }
         closedir($handle);
 
-        foreach($dbSnippets as $snippet){
-            $snippetId = $snippet['id'];
-            if (!in_array($snippetId, $foundSnippets)) {
-                $db->createCommand()->delete('snippets', [
-                    'id' => $snippetId,
-                ])->execute();
 
-                $db->createCommand()->delete('snippet_tags', [
-                    'snippet_id' => $snippetId,
-                ])->execute();
-            }
-        }
+        $array = VarDumper::export($tags);
+        $content = <<<EOD
+<?php
+// tag index
+return $array;
+
+EOD;
 
         return $this->redirect(['/snippets/tools']);
     }
+    */
 
 }
