@@ -262,25 +262,6 @@ class Snippets extends \yii\base\Component
         $html .= '</head>';
         $html .= '<body'.$bodyProperties.'>';
         $html .= $bodyContent;
-        //$publish = $am->publish(Yii::getAlias('@app/assets/iframeresizer/iframeresizer.contentwindow.min.js'));
-        //$html .= '<script type="text/javascript" src="'.$publish[1].'" defer></script>';
-        $html .= '<script type="text/javascript">';
-
-        $h= <<<HTML
-
-        window.addEventListener('DOMContentLoaded', function(e) {
-            var body = document.body,
-            html = document.documentElement;
-
-            var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-
-console.log(height);
-});
-HTML;
-
-        $html .= '</script>';
-
-
         $html .= '</body>';
         $html .= '</html>';
         return $html;

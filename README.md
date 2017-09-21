@@ -87,7 +87,7 @@ If you want any external resources as css or javascript, you can put the content
 ```html
 <head>
     <script src="http://example.com/external.js"></script>
-    <script src="http://example.com/external.js"></script>
+    <link rel="stylesheet" href="mystyle.css">
 </head>
 <body>
     content of snippet will be here
