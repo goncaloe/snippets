@@ -15,7 +15,6 @@ app/
       components          containing reusable user components
       config/             contains application configurations
       controllers/        contains web controller classes
-      migrations          contains database migrations
       models/             contains model classes
       runtime/            contains files generated during runtime
       views/              contains view files for the Web application
@@ -49,45 +48,16 @@ Give write permissions to following folders:
 ```
 app/runtime/
 data/
-web/assets
+web/assets/
 ```
 
-### 3. Configs
-
-Copy the file app/config/local.php-orig to `.php` without `-orig` and adjust to your needs.
-You should specify your database connection there.
-
-```php
-//...
-'components' => [
-    //...
-    'db' => [
-        'class' => 'yii\db\Connection',
-        'dsn' => 'sqlite:' . APP_BASE_PATH . '/data/database.sqlite',
-    ],
-],
-```
-
-### 4. Database
-
-Then apply migrations by running:
-
-```
-yii migrate
-```
-
-### 5. Import Snippets
+### 3. Import Snippets
 
 You can import some snippets and themes from [github.com/goncaloe/snippets-data](https://github.com/goncaloe/snippets-data) repository to data folder:
 
 ~~~
 git clone https://github.com/goncaloe/snippets-data data
 ~~~
-
-### 6. Build Indexes
-
-Each time you create a new snippet or theme, you should rebuild the index.
-Enter in the tools link and click in "Rebuild Index" button
 
 SNIPPETS
 ------------
