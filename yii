@@ -14,10 +14,10 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 require(__DIR__ . '/vendor/autoload.php');
 require(APP_BASE_PATH . '/app/Yii.php');
 
-$config = yii\helpers\ArrayHelper::merge(
-    require(APP_BASE_PATH . '/app/config/console.php'),
-    require(APP_BASE_PATH . '/app/config/local.php')
-);
+$config = require(APP_BASE_PATH . '/app/config/console.php');
+if(file_exists(APP_BASE_PATH . '/app/config/local.php')){
+    $config = yii\helpers\ArrayHelper::merge($config, require(APP_BASE_PATH . '/app/config/local.php'));
+}
 
 $application = new yii\console\Application($config);
 $exitCode = $application->run();
