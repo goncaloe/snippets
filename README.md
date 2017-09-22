@@ -1,7 +1,7 @@
 # Snippets Manager
 Tool to manage local HTML snippets written in PHP (based on yii2).
 
-With this tool you can organize, preview, edit and save all your HTML snippets in one place.
+With this tool you can preview, organize, edit and save all your HTML snippets in one place.
 This is the missing tool for designers to organize their snippets.
 
 ![Snippets Manager](https://webzop.com/images/pages/1fb8d70e-e33d-4fe7-986d-a56b5260cf2d.jpg)

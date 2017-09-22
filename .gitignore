@@ -26,6 +26,4 @@ phpunit.phar
 # local phpunit config
 /phpunit.xml
 
-
-data/*
-!data/.gitkeep
+/data
