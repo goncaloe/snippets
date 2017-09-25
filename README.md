@@ -52,8 +52,11 @@ web/assets/
 ```
 
 ### 3. Import Snippets
+You can import some snippets and themes by clone repo [github.com/goncaloe/snippets-data](https://github.com/goncaloe/snippets-data) into data/ folder:
 
-You can import some snippets and themes by extract [github.com/goncaloe/snippets-data](https://github.com/goncaloe/snippets-data/archive/master.zip) to data/ folder:
+~~~
+git clone https://github.com/goncaloe/snippets-data data
+~~~
 
 SNIPPETS
 ------------
