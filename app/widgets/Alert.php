@@ -34,6 +34,7 @@ class Alert extends \yii\base\Widget
         $appendCss = ' alert-dismissible fade show' . (isset($this->options['class']) ? ' ' . $this->options['class'] : '');
         $this->options['role'] = 'alert';
 
+        $hasAlert = false;
         foreach ($flashes as $type => $data) {
             if (isset($this->alertTypes[$type])) {
                 $data = (array) $data;
@@ -47,10 +48,15 @@ class Alert extends \yii\base\Widget
                     echo Html::button('<span aria-hidden="true">&times;</span>', ['class' => 'close', 'data-dismiss' => 'alert', 'aria-label' => 'Close']) . "\n";
                     echo $message . "\n";
                     echo "\n" . Html::endTag('div');
+                    $hasAlert = true;
                 }
 
                 $session->removeFlash($type);
             }
+        }
+
+        if($hasAlert) {
+            $this->getView()->registerJs("$('[data-dismiss=\"alert\"]').on('click', function(){ $(this).parent().remove(); return false;})");
         }
 
     }

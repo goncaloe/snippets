@@ -29,7 +29,7 @@ $this->title = 'Snippets List';
                     </div>
                 </div>
                 <div class="float-right">
-                    <? if(!empty($snippet['date'])): ?><span class="snippet-date"><?= date('d/m/Y H:i', $snippet['date']);?></span><? endif; ?>
+                    <? if(!empty($snippet['date'])): ?><span class="snippet-date"><?= $snippet['date']; ?></span><? endif; ?>
                 </div>
             </div>
             <iframe class="snippet-frame" src="<?= Url::toRoute(['snippets/iframe', 'id' => $id]) ?>"></iframe>

@@ -19,12 +19,13 @@ CodemirrorAsset::register($this);
             <a class="btn btn-primary" href="<?= Url::toRoute(['snippets/iframe', 'id' => $snippet['id']]) ?>" target="_blank" id="open_iframe">IFRAME</a>
         </div>
         <h1><a href="<?= Url::toRoute(['/snippets/list']) ?>">Snippets</a> <small><?= $snippet['name'] ?> - #<?= $snippet['id'] ?></small></h1>
-
+        <? if(!empty($snippet['tags'])): ?>
         <div class="snippet-tags">
             <? foreach($snippet['tags'] as $tag): ?>
             <a href="<?= Url::toRoute(['/snippets/list', 'tags' => $tag])?>"><span class="label"><?= $tag ?></span></a>
             <? endforeach; ?>
         </div>
+        <? endif; ?>
 
         <ul class="snippet-buttons">
             <li><a class="tab-link" href="#iframe_content" id="show-preview">Preview</a></li>

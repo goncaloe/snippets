@@ -149,7 +149,6 @@ class Snippets extends \yii\base\Component
             if (($data = @json_decode($content, true)) !== null) {
                 $data['id'] = $id;
                 $data['path'] = $path;
-                $data['date'] = isset($data['date']) ? strtotime($data['date']) : 0;
                 return $data;
             }
         }

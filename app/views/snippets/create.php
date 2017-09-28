@@ -19,10 +19,10 @@ $this->title = 'Create Snippet';
     <?= $form->field($snippet, 'id') ?>
     <?= $form->field($snippet, 'name') ?>
     <?= $form->field($snippet, 'tags')->textInput(['placeholder' => 'tag1, tags2']) ?>
-    <?= $form->field($snippet, 'createdAtText')->textInput(['placeholder' => date('d-m-Y')]) ?>
+    <?= $form->field($snippet, 'date')->textInput(['placeholder' => date('d-m-Y H:m')]) ?>
     <?= $form->field($snippet, 'framework')->dropDownList($snippet->frameworkOptions()); ?>
-    <?= $form->field($snippet, 'css')->checkbox() ?>
-    <?= $form->field($snippet, 'js')->checkbox() ?>
+    <?= $form->field($snippet, 'inc_css')->checkbox() ?>
+    <?= $form->field($snippet, 'inc_js')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-primary']) ?>

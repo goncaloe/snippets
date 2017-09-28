@@ -135,7 +135,7 @@ class SnippetsController extends Controller
         $request = Yii::$app->getRequest();
 
         $snippetsManager = Yii::$app->getSnippets();
-        $snippetPath = $snippetsManager->basePath.'/'.$id;
+        $snippetPath = $snippetsManager->snippetsPath.'/'.$id;
 
         $indexFile = $snippetPath.'/index.html';
         if(!file_exists($indexFile)){
@@ -185,11 +185,11 @@ class SnippetsController extends Controller
 
     public function actionCreate(){
         $snippet = new Snippet([
-            'created_at' => time()
+            'date' => date('d-m-Y H:m')
         ]);
 
         $request = Yii::$app->getRequest();
-        if ($snippet->load($request->post()) && $snippet->validate()) {
+        if($snippet->load($request->post()) && $snippet->save()){
             yii::$app->getSession()->setFlash('success', 'Snippet created successfully.');
             return Yii::$app->getResponse()->redirect(['snippets/edit', 'id' => $snippet->id]);
         }
@@ -200,13 +200,13 @@ class SnippetsController extends Controller
     }
 
     public function actionEdit($id){
-        $snippet = Snippet::findOne($id);
+        $snippet = Snippet::findSnippet($id);
         if(!$snippet){
             throw new HttpException(404, 'Snippet does not exists.');
         }
 
         $request = Yii::$app->getRequest();
-        if ($snippet->load($request->post()) && $snippet->validate()) {
+        if($snippet->load($request->post()) && $snippet->save()){
             yii::$app->getSession()->setFlash('success', 'Snippet modified successfully.');
             return Yii::$app->getResponse()->redirect(['snippets/edit', 'id' => $id]);
         }
@@ -216,16 +216,19 @@ class SnippetsController extends Controller
         ]);
     }
 
-
     public function actionDelete($id){
-        $snippet = Snippet::findOne($id);
-        if(!$snippet){
-            throw new HttpException(404, 'Snippet does not exists.');
-        }
+        $snippetsManager = Yii::$app->getSnippets();
+        $snippetPath = $snippetsManager->snippetsPath.'/'.$id;
+        if(is_dir($snippetPath)) {
+            FileHelper::removeDirectory($snippetPath);
 
-        $deleted = $snippet->delete() ? 1 : 0;
-        if($deleted){
-            yii::$app->getSession()->setFlash('success', 'Snippet deleted successfully.');
+
+            $cache = Yii::$app->getCache();
+            if(isset($cache->cachePath)){
+                FileHelper::removeDirectory($cache->cachePath);
+            }
+
+            Yii::$app->getSession()->setFlash('success', 'Snippet deleted successfully.');
         }
 
         return Yii::$app->getResponse()->redirect(['snippets/manage']);
@@ -242,63 +245,10 @@ class SnippetsController extends Controller
         $cache = Yii::$app->getCache();
         if(isset($cache->cachePath)){
             FileHelper::removeDirectory($cache->cachePath);
+            yii::$app->getSession()->setFlash('success', 'Cache was cleared successfully.');
         }
 
         return $this->redirect(['/snippets/tools']);
     }
-
-    /*
-    public function actionRebuild2()
-    {
-
-        $snippetsManager = Yii::$app->getSnippets();
-        $snippetsPath = $snippetsManager->basePath;
-
-        $cachePath = Yii::$app->getRuntimePath() . '/snippets';
-        if (!is_dir($cachePath)) {
-            FileHelper::createDirectory($cachePath, 0775, true);
-        }
-
-        $tagIndexFile = Yii::$app->getRuntimePath().'/snippets/tags.php';
-        $tagIndex = is_file($tagIndexFile) ? include($tagIndexFile) : [];
-
-        $handle = opendir($snippetsPath);
-        $tags = [];
-        while (($snippetId = readdir($handle)) !== false) {
-            if ($snippetId === '.' || $snippetId === '..') {
-                continue;
-            }
-
-            $path = $snippetsPath . DIRECTORY_SEPARATOR . $snippetId;
-            $metaFile = $path.'/snippet.json';
-            if(!is_file($metaFile)){
-                continue;
-            }
-
-            $content = file_get_contents($metaFile);
-            if(!($meta = json_decode($content, true))){
-                continue;
-            }
-
-            if(!empty($meta['tags'])){
-                foreach ($meta['tags'] as $tag) {
-                    $tags[$tag][] = $snippetId;
-                }
-            }
-        }
-        closedir($handle);
-
-
-        $array = VarDumper::export($tags);
-        $content = <<<EOD
-<?php
-// tag index
-return $array;
-
-EOD;
-
-        return $this->redirect(['/snippets/tools']);
-    }
-    */
 
 }
