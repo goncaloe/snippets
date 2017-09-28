@@ -33,6 +33,12 @@ class TagsList extends \yii\base\Widget
                 }
 
                 if(!empty($s['tags'])){
+                    foreach($reqTags as $tag){
+                        if(!in_array($tag, $s['tags'])){
+                            continue 2;
+                        }
+                    }
+
                     foreach($s['tags'] as $tag) {
                         $tags[$tag] = isset($tags[$tag]) ? $tags[$tag] + 1 : 1;
                     }
